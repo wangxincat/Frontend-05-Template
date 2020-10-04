@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		.con {
+
+		}
+		.cell {
+			display: inline-block;
+			width: 100px;
+			height: 100px;
+			line-height: 100px;
+			background: green;
+			color: red;
+			text-align: center;
+			margin: 5px;
+			vertical-align: middle;
+			font-size: 60px;
+		}
+	</style>
+</head>
+<body>
+	<div class="con"></div>
+	<script type="text/javascript">
+		var pattern = [
+			[0,0,0],
+			[0,1,0],
+			[0,0,0]
+		];
+		var type = 2; //当前落子类型 1:圈 2:×
+		var win = false;
+		function show() {
+			var con = document.querySelector(".con");
+			con.innerHTML = "";
+			for(let i = 0; i < 3; i++) {
+				let item = pattern[i];
+				for(let j = 0; j < 3; j++) {
+					let cell = document.createElement("div");
+					cell.className = 'cell';
+					cell.innerText = item[j] === 2?"×":
+					cell.innerText = item[j] === 1?"○":"";
+					cell.addEventListener("click",()=>{
+						move(i,j);
+					})
+					con.appendChild(cell);
+				}
+				con.appendChild(document.createElement("br"));
+				// con.innerHTML += '<br/>';
+			}
+		}
+		function move(i,j) {
+			if(win) {
+				console.log("已经胜利了");
+				return;
+			}
+			if(pattern[i][j]) {
+				console.log("该处已落子");
+				return;
+			}
+			pattern[i][j] = type;
+			if(check(pattern)) {
+				var res = type === 1?"○":"×";
+				win = true;
+				console.log(res,"胜利");	
+			}else {
+				type = 3 - type;
+				willWin(pattern, type);
+			}
+			console.log(bestChoice(pattern,type));
+			show();
+			computerMove();
+		}
+		function computerMove() {
+			var choice = bestChoice(pattern, type);
+			if(point = choice.point) {
+				pattern[point[0]][point[1]] = type;
+			}
+			if(check(pattern)) {
+				var res = type === 1?"○":"×";
+				win = true;
+				console.log(res,"胜利");	
+			}
+			type = 3 - type;
+			show();
+		}
+		function check(pattern) {
+			for(let i = 0; i < 3; i++) {
+				let val;
+				for(let j = 0; j < 3; j++) {
+					if(!val) {
+						val = pattern[i][j];
+					}
+					if(val !== pattern[i][j] || !pattern[i][j]) {
+						break;
+					}
+					if(j === 2) {
+						
+						return [i,j];
+					}
+				}
+			}
+
+			for(let i = 0; i < 3; i++) {
+				let val;
+				for(let j = 0; j < 3; j++) {
+					if(!val) {
+						val = pattern[j][i];
+					}
+					if(val !== pattern[j][i] || !pattern[j][i]) {
+						break;
+					}
+					if(j === 2) {
+						
+						return [j,i];
+					}
+				}
+			}
+			{
+				let val;
+				for(let j = 0; j < 3; j++) {
+					if(!val) {
+						val = pattern[j][j];
+					}
+					if(val !== pattern[j][j] || !pattern[j][j]) {
+						break;
+					}
+					if(j === 2) {
+						
+						return [j,j];
+					}
+				}
+			}
+			{
+				let val;
+				for(let j = 0; j < 3; j++) {
+					if(!val) {
+						val = pattern[j][3-j];
+					}
+					if(val !== pattern[j][3-j] || !pattern[j][3-j]) {
+						break;
+					}
+					if(j === 2) {
+						
+						return [j,3-j];
+					}
+				}
+			}
+			
+		}
+		function copy(data) {
+			data = JSON.parse(JSON.stringify(data));
+			return data;
+		}
+		function willWin(pattern, type) {
+			for(let i = 0 ; i < 3; i++) {
+				for(let j = 0; j < 3; j++) {
+					var copyPattern = copy(pattern);
+					if(!copyPattern[i][j]) {
+						copyPattern[i][j] = type;
+						if(check(copyPattern)) {
+							return [i,j];
+						}
+					}
+				}
+			}
+			// for(let i = 0; i < 3; i++) {
+			// 	let val;
+			// 	for(let j = 0; j < 3; j++) {
+			// 		val = pattern[i][j];
+			// 		if(!val) {
+			// 			return;
+			// 		}
+			// 		if(i === 2 && j === 2) {
+			// 			console.log(res,"和棋");
+			// 			return [i,j];
+			// 		}
+			// 	}
+			// }
+		}
+		function bestChoice(pattern, type) {
+			if(p = willWin(pattern, type)) {
+				return {
+					point: p,
+					result: 1 
+				}
+			}
+			let result = -2;
+			let point = null;
+			for(let i = 0; i < 3; i++) {
+				for(let j = 0; j < 3; j++) {
+					var clone =  copy(pattern);
+					if(clone[i][j]) {
+						continue;
+					}
+					clone[i][j] = type;
+					let r = bestChoice(clone, 3 - type).result;
+					if(-r > result) {
+						result = -r;
+						point = [i,j];
+					}
+					if(result === 1) {
+						return {
+							
+							point,
+							result,
+						}
+					}
+				}
+			}
+			return {
+				point: point,
+				result: point?result:0
+			}
+		}
+		show();
+		console.log(bestChoice(pattern,type));
+	</script>
+</body>
+</html>
