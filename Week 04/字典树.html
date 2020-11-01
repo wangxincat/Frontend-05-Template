@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+		var $ =  Symbol("$");
+		class Trie {
+			constructor() {
+				this.root = Object.create(null);
+				console.log(this.root);
+			}
+			insert(val) {
+				let node = this.root;
+				for(let i of val) {
+					if(!node[i]) {
+						node[i] = Object.create(null)
+					}
+					node = node[i];
+				}
+				if(!($ in node)) {
+					node[$] = 0;
+				}
+				node[$]++;
+			}
+			most() {
+				var max = 0;
+				var maxVal = "";
+				var visit = (node, val)=>{
+					if(node[$] && node[$] > max) {
+						max = node[$];
+						maxVal = val;
+					}
+					for(let i in node) {
+						visit(node[i], val + i);
+					}
+				};
+				visit(this.root, "");
+				console.log(maxVal, max);
+			}
+		}
+		var trie = new Trie();
+		function randomWord(length) {
+			let word = "";
+			for(let i = 0; i < length; i++) {
+				word += String.fromCharCode(65 + Math.ceil(Math.random()*25));
+			}
+			return word;
+		}
+		for(let i = 0; i < 100000; i++) {
+			trie.insert(randomWord(4));
+		}
+	</script>
+</body>
+</html>
