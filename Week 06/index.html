@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<!-- (产生式)BNF -->
+<MultiplicativeExpression>::= <Number> |
+	<MultiplicativeExpression> "*" <Number> |
+	<MultiplicativeExpression> "/" <Number> |
+<AddtiveExpression>::= <MultiplicativeExpression> |
+	<AddtiveExpression> "+" <MultiplicativeExpression> |
+	<AddtiveExpression> "-" <MultiplicativeExpression> |
+	(<AddtiveExpression> "+" <MultiplicativeExpression> )|
+	(<AddtiveExpression> "-" <MultiplicativeExpression>) |
+<!-- 0型 无限制文法 -->
+?::=?
+<!-- 1 上下文相关文法 -->
+?<A>?::=?<B>?
+<!-- 2 上下文无关文法 -->
+<A>::=?
+<!-- 3 正则文法 -->
+<A>::=<A>?
+<A>::=?<A> (×)
+<!-- 语言分类 -->
+静态类型: c、c++、java
+动态类型: js、ruby、python
+
+
+
+<!-- 原子 Atom -->
+
+<!-- Number -->
+IEEE 754 Double Float
+sign(1)
+exponent(11)
+fraction(52)
+
+<!-- String -->
+character
+code point
+encoding
+	<script type="text/javascript">
+		
+		// Number
+		//String
+		function UTF8_Encoding(string) {
+			let arr = [];
+			Array.prototype.forEach.call(string,(item)=>{
+				let code = item.charCodeAt().toString(2);
+				code = code.length === 16?code: Array(16 - code.length).fill(0).join("") + code;
+				code = [
+				'1110' + code.slice(0,4),
+				"10" + code.slice(4,10),
+				 "10" + code.slice(10)
+				]
+				arr.push(code);
+			})
+			return arr;
+		}
+		// 对象
+		// 狗咬人
+		function  Animal(name) {
+			this.name = name;
+			this.bite = function(what) {
+				console.log(this.name + "咬" + what);
+			}
+		}
+		let dog = new Animal("狗");
+		dog.bite("人");
+
+		// 狗咬人答案   原则: 行为改变状态
+		class Human {
+			hurt(damage) {
+
+			}
+		}
+
+		//
+		function find() {
+			let arr = [];
+			for(let i in window) {
+				try{
+					let item = window[i];
+					if(item instanceof Object) {
+						arr.push(i);
+						for(let j in  item.prototype) {
+							if(j.indexOf("[[") > -1) {
+								arr.push(i);
+								break;
+							}
+						}
+					}
+				}catch(err){
+
+				}
+				
+			}
+			console.log(arr);
+		}
+		find();
+	</script>
+</body>
+</html>
