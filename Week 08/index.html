@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+		function find(str) {
+			let index = str.indexOf("ab");
+			if(index > -1) {
+				return true;
+			}
+			return false;
+		}
+		function match(str) {
+			for(let i  = 0; i < str.length; i++) {
+				if(str[i] === "a") {
+					if(str[i + 1] === 'b') {
+						return true
+					}
+				}
+			}
+			return false;
+		}
+		function match(str) {
+			let s = "abcdef";
+			let num = 0;
+			let word = "";
+			for(let i of str) {
+				if(i === s[num]) {
+					word += i;
+					num++;
+					if(word === s) {
+						return true;
+					}
+				}else {
+					num = 0;
+					word = "";
+				}
+			}
+			return false;
+		}
+		// 状态机
+		let next = "c";
+		function match(str) {
+			let state = start;
+			for(let i of str) {
+				state = state(i);
+			}
+			return state === end;
+		}
+
+		function end(i) {
+			return end;
+		}
+		function start(i) {
+			if(i === 'a') {
+				return foundA;
+			}else {
+				return start;
+			}
+		}
+		function foundA(i) {
+			if(i === 'b') {
+				if(next === 'c') {
+					return foundBc;
+				}else if(next === 'x') {
+					return foundBx;
+				}
+				
+			}else {
+				return start(i);
+			}
+		}
+		function foundBc(i) {
+			if(i === 'c') {
+				next = "x";
+				return foundA;
+			}else {
+				return start(i);
+			}
+		}
+		function foundBx(i) {
+			if(i === 'x') {
+				return end;
+			}else {
+				return start(i);
+			}
+		}
+		// abababx
+		function match(str) {
+			let state = start;
+			for(let i of str) {
+				state = state(i);
+			}
+			return state === end;
+		}
+		function end() {
+			return end;
+		}
+		function start(i) {
+			if(i === 'a') {
+				return foundA1;
+			}else {
+				return start;
+			}
+		}
+		function foundA1(i) {
+			if(i === 'b') {
+				return foundB1;
+			}else {
+				return start(i);
+			}
+		}
+		function foundB1(i) {
+			if(i === 'a') {
+				return foundA2;
+			}else {
+				return start(i);
+			}
+		}
+		function foundA2(i) {
+			if(i === 'b') {
+				return foundB2;
+			}else {
+				return start(i);
+			}
+		}
+		function foundB2(i) {
+			if(i === 'a') {
+				return foundA3;
+			}else {
+				return start(i);
+			}
+		}
+		function foundA3(i) {
+			if(i === 'b') {
+				return foundB3;
+			}else {
+				return start(i);
+			}
+		}
+		function foundB3(i) {
+			if(i === 'x') {
+				return end;
+			}else {
+				return foundA3;
+			}
+		}
+	</script>
+</body>
+</html>
